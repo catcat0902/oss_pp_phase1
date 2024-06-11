@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 
 # Pygame 초기화
 pygame.init()
@@ -13,15 +14,18 @@ pygame.display.set_caption("톰을 피해라!!!")
 clock = pygame.time.Clock()
 FPS = 60
 
+current_path = os.path.dirname(__file__)
+image_path = os.path.join(current_path, "images")
+
 # 이미지 로드 및 최적화
-background = pygame.image.load(r"C:\Users\김서현\Desktop\oss_pp_phase1\images\background.png").convert()
-character = pygame.image.load(r"C:\Users\김서현\Desktop\oss_pp_phase1\images\character.png").convert_alpha()
-angry_jerry = pygame.image.load(r"C:\Users\김서현\Desktop\oss_pp_phase1\images\angry_jerry.png").convert_alpha()
+background = pygame.image.load(os.path.join(image_path, "background.png")).convert()
+character = pygame.image.load(os.path.join(image_path, "character.png")).convert_alpha()
+angry_jerry = pygame.image.load(os.path.join(image_path, "angry_jerry.png")).convert_alpha()
 tom_images = [
-    pygame.image.load(r"C:\Users\김서현\Desktop\oss_pp_phase1\images\tom1.png").convert_alpha(),
-    pygame.image.load(r"C:\Users\김서현\Desktop\oss_pp_phase1\images\tom2.png").convert_alpha(),
-    pygame.image.load(r"C:\Users\김서현\Desktop\oss_pp_phase1\images\tom3.png").convert_alpha()
-]
+    pygame.image.load(os.path.join(image_path, "tom1.png")).convert_alpha(),
+    pygame.image.load(os.path.join(image_path, "tom2.png")).convert_alpha(),
+    pygame.image.load(os.path.join(image_path, "tom3.png")).convert_alpha()
+]   ############### 이미지를 상대 경로로 변경했습니다 #####################
 
 # 캐릭터 크기 및 위치 설정
 character_size = character.get_rect().size
@@ -38,8 +42,15 @@ speed = 5
 tom_list = []  # 톰 정보를 담을 리스트
 tom_speed = 5
 
-# 폰트 설정
+# 폰트 설정 ddd
 game_font = pygame.font.Font(None, 40)
+
+#####################################
+######### PHASE 2 ###################
+score = 0        ## 점수 추가
+#####################################
+#####################################
+
 
 # 게임 시간 설정
 total_time = 50
@@ -77,6 +88,13 @@ while running:
         tom[1] += tom_speed  # 톰 떨어뜨리기
         if tom[1] > screen_height:  # 톰이 화면 밖으로 나가면 제거
             tom_list.remove(tom)
+            #####################################
+            ######### PHASE 2 ###################
+            score += 1  # 톰을 피할 때마다 점수 증가
+            #####################################
+            #####################################
+
+
 
         # 충돌 처리 (Rect 사용)
         character_rect = character.get_rect(topleft=(character_x_pos, character_y_pos))
@@ -93,6 +111,13 @@ while running:
     screen.blit(character, (character_x_pos, character_y_pos))
     for tom in tom_list:
         screen.blit(tom[2], (tom[0], tom[1]))  # 각 톰 이미지 그리기
+
+    #####################################
+    ######### PHASE 2 ###################
+    score_display = game_font.render(f"Score: {score}", True, (255, 255, 255))
+    screen.blit(score_display, (10, 40))   # 점수 표시
+    #####################################
+    #####################################
 
     # 타이머 표시
     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000 
