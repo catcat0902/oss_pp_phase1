@@ -109,15 +109,29 @@ def game_loop():      ## 게임 루프 정의
 
 
 
-            # 충돌 처리 (Rect 사용)
-            character_rect = character.get_rect(topleft=(character_x_pos, character_y_pos))
-            tom_rect = tom[2].get_rect(topleft=(tom[0], tom[1]))
-            if character_rect.colliderect(tom_rect):
+            #####################################
+            ######### PHASE 2 ###################
+            character_rect_head = pygame.Rect(character_x_pos, character_y_pos, character_width, character_height // 2)
+            character_rect_body = pygame.Rect(character_x_pos, character_y_pos + character_height // 2, character_width, character_height // 2)
+            character_rect_legs = pygame.Rect(character_x_pos, character_y_pos + 2 * (character_height // 3), character_width, character_height // 3)
+            tom_rect_head = pygame.Rect(tom[0], tom[1], tom[2].get_width(), tom[2].get_height() // 2)                         ##충돌 영역 세분화
+            tom_rect_body = pygame.Rect(tom[0], tom[1] + tom[2].get_height() // 2, tom[2].get_width(), tom[2].get_height() // 2)
+            tom_rect_legs = pygame.Rect(tom[0], tom[1] + 2 * (tom[2].get_height() // 3), tom[2].get_width(), tom[2].get_height() // 3)
+
+            if (character_rect_head.colliderect(tom_rect_head) or 
+                character_rect_body.colliderect(tom_rect_body) or 
+                character_rect_legs.colliderect(tom_rect_legs)):
+            #####################################
+            #####################################
                 character = angry_jerry_img
                 character_y_pos -= 90
                 pygame.display.update()
                 pygame.time.delay(2000)
+                #####################################
+                ######### PHASE 2 ###################
                 return True
+                #####################################
+                #####################################
 
         # 화면에 그리기
         screen.blit(background, (0, 0))
